@@ -1,0 +1,36 @@
+name: BPMN Validation
+
+# Run the workflow only on pull requests
+on: 
+  pull_request:
+    paths:
+      - 'bpmn/**/*.bpmn'
+
+jobs:
+  validate-bpmn:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Get list of changed BPMN files
+      id: changed_files
+      run: |
+        # Get the list of modified BPMN files in the PR
+        CHANGED_FILES=$(git diff --name-only ${{ github.base_ref }} ${{ github.head_ref }} | grep '\.bpmn$' || true)
+        echo "changed_files=$CHANGED_FILES" >> $GITHUB_ENV
+
+    - name: Run BPMN Validation
+      if: env.changed_files != ''
+      run: |
+        # Convert the list of files to an array and pass them as arguments to the validation script
+        node validateBpmn.js ${{ env.changed_files }}

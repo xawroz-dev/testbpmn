@@ -4,7 +4,7 @@ name: BPMN Validation
 on: 
   pull_request:
     paths:
-      - 'bpmn/**/*.bpmn'
+      - '**/*.bpmn'
 
 jobs:
   validate-bpmn:

@@ -5,6 +5,9 @@ on:
   pull_request:
     paths:
       - '**/*.bpmn'
+  push:
+    paths:
+      - '**/*.bpmn'
 
 jobs:
   validate-bpmn:

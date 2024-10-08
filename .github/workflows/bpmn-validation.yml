@@ -41,7 +41,7 @@ jobs:
           **.bpmn
           src/main/resources/**/**.bpmn
 
-    - name: Get list of changed BPMN files
-      id: changed_files
+    - name: Validate changed BPMNs
+      id: validate_bpmns
       run: |
         node validateBpmn.js ${{ steps.changed-files.outputs.all_changed_files }}

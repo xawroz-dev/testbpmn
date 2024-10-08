@@ -17,7 +17,26 @@ function validateBpmnFile(filePath) {
             process.exit(1);
         }
 
-        const serviceTasks = result['bpmn:definitions']['bpmn:process'][0]['bpmn:serviceTask'] || [];
+        // Try to find the process element, considering namespace variations
+        const definitions = result['bpmn:definitions'] || result['definitions'];
+        if (!definitions) {
+            console.error(`No definitions found in ${filePath}`);
+            process.exit(1);
+        }
+
+        const process = definitions['bpmn:process'] || definitions['process'];
+        if (!process || !Array.isArray(process)) {
+            console.error(`No process found in ${filePath}`);
+            process.exit(1);
+        }
+
+        // Get service tasks from the process
+        const serviceTasks = process[0]['bpmn:serviceTask'] || process[0]['serviceTask'] || [];
+        if (serviceTasks.length === 0) {
+            console.log(`No serviceTask elements found in ${filePath}`);
+            return;
+        }
+
         let isValid = true;
 
         serviceTasks.forEach(task => {

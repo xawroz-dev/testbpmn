@@ -19,9 +19,10 @@ jobs:
       with:
         fetch-depth: 0  # Fetch all history for all branches
 
-    - name: Fetch the base branch
+    - name: Fetch base branch
+      if: github.event_name == 'pull_request'
       run: |
-        # Fetch the base branch explicitly
+        # Fetch the base branch explicitly to make it available for diff
         git fetch origin ${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
 
     - name: Set up Node.js
@@ -40,7 +41,7 @@ jobs:
           BASE_BRANCH=origin/${{ github.event.pull_request.base.ref }}
           HEAD_BRANCH=${{ github.event.pull_request.head.ref }}
         else
-          BASE_BRANCH=${{ github.ref }}
+          BASE_BRANCH=$(git rev-parse --abbrev-ref HEAD)
           HEAD_BRANCH=${{ github.sha }}
         fi
 

@@ -4,7 +4,7 @@
     <startEvent id="StartEvent_1y45yut" name="hunger noticed">
       <outgoing>SequenceFlow_0h21x7r</outgoing>
     </startEvent>
-    <sequenceFlow id="SequenceFlow_0h21x7r" sourceRef="StartEvent_1y45yut" targetRef="Task_1hcentk" />
+    <sequenceFlow id="SequenceFlow_0h21x7r22" sourceRef="StartEvent_1y45yut" targetRef="Task_1hcentk" />
     <exclusiveGateway id="ExclusiveGateway_15hu1pt" name="desired dish?">
       <incoming>SequenceFlow_0wnb4ke</incoming>
     </exclusiveGateway>

@@ -8,7 +8,7 @@
     <exclusiveGateway id="ExclusiveGateway_15hu1pt" name="desired dish?">
       <incoming>SequenceFlow_0wnb4ke</incoming>
     </exclusiveGateway>
-    <sequenceFlow id="SequenceFlow_0wnb4ke" sourceRef="Task_1hcentk" targetRef="ExclusiveGateway_15hu1pt" />
+    <sequenceFlow id="SequenceFlow_0wnb4kesafd" sourceRef="Task_1hcentk" targetRef="ExclusiveGateway_15hu1pt" />
     <serviceTask id="Task_1hcentk" name="choose recipe">
       <incoming>SequenceFlow_0h21x7r</incoming>
       <outgoing>SequenceFlow_0wnb4ke</outgoing>

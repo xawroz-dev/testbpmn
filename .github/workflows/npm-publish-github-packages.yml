@@ -1,0 +1,56 @@
+name: BPMN Validation
+
+# Run the workflow on pull requests and pushes for any .bpmn file change
+on: 
+  pull_request:
+    paths:
+      - '**/*.bpmn'
+  push:
+    paths:
+      - '**/*.bpmn'
+
+jobs:
+  validate-bpmn:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Fetch all history for all branches
+
+    - name: Fetch base branch
+      if: github.event_name == 'pull_request'
+      run: |
+        # Fetch the base branch explicitly to make it available for diff
+        git fetch origin ${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Get list of changed BPMN files
+      id: changed_files
+      run: |
+        # Set the base and head branches dynamically based on the event type
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          BASE_BRANCH=origin/${{ github.event.pull_request.base.ref }}
+          HEAD_BRANCH=${{ github.event.pull_request.head.ref }}
+        else
+          BASE_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          HEAD_BRANCH=${{ github.sha }}
+        fi
+
+        # Use git diff to get BPMN files that have changed
+        CHANGED_FILES=$(git diff --name-only $BASE_BRANCH $HEAD_BRANCH -- '*.bpmn' || true)
+        echo "changed_files=$CHANGED_FILES" >> $GITHUB_ENV
+
+    - name: Run BPMN Validation
+      if: env.changed_files != ''
+      run: |
+        # Convert the list of files to an array and pass them as arguments to the validation script
+        node validateBpmn.js ${{ env.changed_files }}

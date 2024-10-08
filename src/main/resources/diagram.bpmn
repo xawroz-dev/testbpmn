@@ -9,7 +9,7 @@
       <incoming>SequenceFlow_0wnb4ke</incoming>
     </exclusiveGateway>
     <sequenceFlow id="SequenceFlow_0wnb4kes" sourceRef="Task_1hcentk" targetRef="ExclusiveGateway_15hu1pt" />
-    <serviceTask id="Activity_1hcentk" name="choose recipe">
+    <serviceTask id="Activity_1hcehgk" name="choose recipe">
       <incoming>SequenceFlow_0h21x7r</incoming>
       <outgoing>SequenceFlow_0wnb4ke</outgoing>
     </serviceTask>

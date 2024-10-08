@@ -28,8 +28,17 @@ jobs:
     - name: Get list of changed BPMN files
       id: changed_files
       run: |
-        # Get the list of modified BPMN files in the PR
-        CHANGED_FILES=$(git diff --name-only ${{ github.base_ref }} ${{ github.head_ref }} | grep '\.bpmn$' || true)
+        # Get the list of modified BPMN files in the PR or push
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          BASE_BRANCH=${{ github.event.pull_request.base.ref }}
+          HEAD_BRANCH=${{ github.event.pull_request.head.ref }}
+        else
+          BASE_BRANCH=${{ github.ref }}
+          HEAD_BRANCH=${{ github.sha }}
+        fi
+
+        # Use git diff to get BPMN files that have changed
+        CHANGED_FILES=$(git diff --name-only $BASE_BRANCH $HEAD_BRANCH | grep '\.bpmn$' || true)
         echo "changed_files=$CHANGED_FILES" >> $GITHUB_ENV
 
     - name: Run BPMN Validation
